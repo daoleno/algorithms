@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -110,10 +111,7 @@ private:
 
 class Merge {
 public:
-  void sort(vector<string> &a) {
-    // aux.resize(a.size());
-    sort(a, 0, a.size() - 1);
-  }
+  void sort(vector<string> &a) { sort(a, 0, a.size() - 1); }
 
   void show(vector<string> a) {
     for (auto i : a) {
@@ -129,26 +127,12 @@ private:
     // 将 a[lo..mid] 和 a[mid+1..hi] 归并
     int i = lo, j = mid + 1;
     vector<string> aux(a);
-    // aux.resize(a.size());
-    static int count = 0;
-    cout << "gua le" << count++ << endl;
-    // for (int k = lo; k <= hi; ++k) {
-    //   // cout << k << ": " << a[k] << endl;
-    //   aux[k] = a[k];
-    // }
-
-    // cout << "-----------" << endl;
 
     // 从辅助数组 aux 向 结果数组 a 中放数据
     for (int k = lo; k <= hi; ++k) {
-      if (j > mid) {
+      if (i > mid) {
         // 左半边用尽（取右边的元素）
-        cout << "----- begin ------" << endl;
-        cout << "k: " << k << "j: " << j << endl;
         a[k] = aux[j++];
-        cout << "----- end -----" << endl;
-        cout << "************************************************************"
-             << endl;
       } else if (j > hi) {
         // 右半边用尽（取左边的元素）
         a[k] = aux[i++];
@@ -165,13 +149,60 @@ private:
     if (hi <= lo)
       return;
     int mid = lo + (hi - lo) / 2;
-    cout << "mid: " << mid << endl;
     // 将左半边排序
     sort(a, lo, mid);
     // 将右半边排序
     sort(a, mid + 1, hi);
     // 归并结果
     merge(a, lo, mid, hi);
+  }
+};
+
+class MergeBU {
+public:
+  void sort(vector<string> &a) {
+    int N = a.size();
+    // sz 子数组大小
+    for (int sz = 1; sz < N; sz = sz + sz) {
+      // lo 子数组索引
+      for (int lo = 0; lo < N - sz; lo += sz + sz) {
+        merge(a, lo, lo + sz - 1, min(lo + sz + sz - 1, N - 1));
+      }
+    }
+  }
+
+  void show(vector<string> a) {
+    for (auto i : a) {
+      cout << i << " ";
+    }
+    cout << endl;
+  }
+
+private:
+  // vector<string> aux;
+  bool less(string i, string j) { return i < j; }
+  void merge(vector<string> &a, int lo, int mid, int hi) {
+    // 将 a[lo..mid] 和 a[mid+1..hi] 归并
+    int i = lo, j = mid + 1;
+    // 每次都会创建辅助vector，可以设为成员变量以提高性能
+    vector<string> aux(a);
+
+    // 从辅助数组 aux 向 结果数组 a 中放数据
+    for (int k = lo; k <= hi; ++k) {
+      if (i > mid) {
+        // 左半边用尽（取右边的元素）
+        a[k] = aux[j++];
+      } else if (j > hi) {
+        // 右半边用尽（取左边的元素）
+        a[k] = aux[i++];
+      } else if (less(aux[j], aux[i])) {
+        // 右半边的当前元素小于左半边的当前元素（取右边的元素）
+        a[k] = aux[j++];
+      } else {
+        // 左半边的当前元素小于右半边的当前元素（取左边的元素）
+        a[k] = aux[i++];
+      }
+    }
   }
 };
 
@@ -185,7 +216,8 @@ int main() {
   // Selection s;
   // Insertion s;
   // Shell s;
-  Merge s;
+  // Merge s;
+  MergeBU s;
   s.sort(vec);
   s.show(vec);
 
