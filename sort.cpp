@@ -179,7 +179,6 @@ public:
   }
 
 private:
-  // vector<string> aux;
   bool less(string i, string j) { return i < j; }
   void merge(vector<string> &a, int lo, int mid, int hi) {
     // 将 a[lo..mid] 和 a[mid+1..hi] 归并
@@ -206,6 +205,74 @@ private:
   }
 };
 
+class Quick {
+public:
+  void sort(vector<string> &a) {
+    // 消除对输入的依赖（利于预测算法的运行实践）
+    random_shuffle(a.begin(), a.end());
+    sort(a, 0, a.size() - 1);
+  }
+
+  void show(vector<string> a) {
+    for (auto i : a) {
+      cout << i << " ";
+    }
+    cout << endl;
+  }
+
+private:
+  void sort(vector<string> &a, int lo, int hi) {
+    // Method 1
+    // if (hi <= lo) {
+    //   return;
+    // }
+    
+    // Method 2
+    // 对于小数组，切换成插入排序
+    Insertion ins;
+    // 转换参数 M 的最佳值和系统相关。建议：5 ~ 15
+    int M = 7;
+    if (hi <= lo + M) {
+      ins.sort(a);
+      return;
+    }
+    int j = partition(a, lo, hi);
+    // 将左半部分 a[lo .. j-1] 排序
+    sort(a, lo, j - 1);
+    // 将右半部分 a[j+1 .. hi] 排序
+    sort(a, j + 1, hi);
+  }
+  int partition(vector<string> &a, int lo, int hi) {
+    // 左右扫描指针
+    int i = lo, j = hi + 1;
+    // 切分元素
+    string v = a[lo];
+    while (true) {
+      // 扫描左右，检查扫描是否结束并交换元素
+      while (less(a[++i], v)) {
+        if (i == hi)
+          break;
+      }
+      while (less(v, a[--j])) {
+        if (j == lo)
+          break;
+      }
+      if (i >= j) {
+        break;
+      }
+      exch(a, i, j);
+    }
+    exch(a, lo, j);
+    return j;
+  }
+  bool less(string i, string j) { return i < j; }
+  void exch(vector<string> &a, int i, int j) {
+    string temp = a[i];
+    a[i] = a[j];
+    a[j] = temp;
+  }
+};
+
 int main() {
   vector<string> vec;
   string buf;
@@ -217,7 +284,8 @@ int main() {
   // Insertion s;
   // Shell s;
   // Merge s;
-  MergeBU s;
+  // MergeBU s;
+  Quick s;
   s.sort(vec);
   s.show(vec);
 
