@@ -226,7 +226,7 @@ private:
     // if (hi <= lo) {
     //   return;
     // }
-    
+
     // Method 2
     // 对于小数组，切换成插入排序
     Insertion ins;
@@ -273,6 +273,111 @@ private:
   }
 };
 
+/* class MaxPQ {
+public:
+  MaxPQ(int maxN) { pq.resize(maxN); }
+  bool isEmpty() { return N == 0; }
+  int size() { return N; };
+  void insert(string &v) {
+    pq[++N] = v;
+    swim(N);
+  }
+  string delMax() {
+    // 从根节点得到最大元素
+    string max = pq[1];
+    // 将其和最后一个元素交换
+    exch(1, N--);
+    // 防止对象游离
+    pq[N + 1] = nullptr;
+    sink(1);
+    return max;
+  }
+
+private:
+  bool less(int i, int j) { return pq[i] < pq[j]; }
+  void exch(int i, int j) {
+    string temp = pq[i];
+    pq[i] = pq[j];
+    pq[j] = temp;
+  }
+  void swim(int k) {
+    while (k > 1 && less(k / 2, k)) {
+      exch(k / 2, k);
+      k = k / 2;
+    }
+  }
+  void sink(int k) {
+    while (2 * k < N) {
+      int j = 2 * k;
+      if (j < N && less(j, j + 1)) {
+        j++;
+      }
+      if (!(less(k, j))) {
+        break;
+      }
+      exch(k, j);
+      k = j;
+    }
+  }
+
+private:
+  // 基于堆的二叉树
+  vector<string> pq;
+  // 存储于 pq[1..N] 中， pq[0] 没有使用
+  int N = 0;
+}; */
+
+class Heap {
+public:
+  // Heap() {}
+  void sort(vector<string> &pq) {
+    int n = pq.size();
+    // 构造堆（任意顺序 -> 堆有序）
+    for (int k = n / 2; k >= 1; k--) {
+      sink(pq, k, n);
+    }
+    // 下沉排序
+    while (n > 1) {
+      exch(pq, 1, n--);
+      sink(pq, 1, n);
+    }
+  }
+  void show(vector<string> a) {
+    for (auto i : a) {
+      cout << i << " ";
+    }
+    cout << endl;
+  }
+
+private:
+  // pq[1..N]
+  bool less(vector<string> pq, int i, int j) { return pq[i - 1] < pq[j - 1]; }
+  void exch(vector<string> &pq, int i, int j) {
+    string temp = pq[i - 1];
+    pq[i - 1] = pq[j - 1];
+    pq[j - 1] = temp;
+  }
+  void sink(vector<string> &pq, int k, int n) {
+    while (2 * k < n) {
+      int j = 2 * k;
+      if (j < n && less(pq, j, j + 1)) {
+        j++;
+      }
+      if (!(less(pq, k, j))) {
+        break;
+      }
+      exch(pq, k, j);
+      k = j;
+    }
+  }
+
+private:
+  // 基于堆的二叉树
+  vector<string> pq;
+  // 存储于 pq[1..N] 中， pq[0] 没有使用
+  int N = 0;
+};
+
 int main() {
   vector<string> vec;
   string buf;
@@ -285,7 +390,8 @@ int main() {
   // Shell s;
   // Merge s;
   // MergeBU s;
-  Quick s;
+  // Quick s;
+  Heap s;
   s.sort(vec);
   s.show(vec);
 
