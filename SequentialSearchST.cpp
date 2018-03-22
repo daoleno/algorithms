@@ -2,7 +2,7 @@
 //  Symbol table implementation with sequential search in an
 //  unordered linked list of key-value pairs.
 
-// usage: ./SequentialSearchST < tiny.txt
+// usage: ./SequentialSearchST < tinyST.txt
 // L 11
 // P 10
 // M 9
