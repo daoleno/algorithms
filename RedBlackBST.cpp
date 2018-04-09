@@ -1,5 +1,5 @@
-// ! This program have bug
-// TODE: To be normal
+// ! This program have bugs
+// TODO: To be normal
 
 #include <deque>
 #include <iostream>
@@ -137,6 +137,7 @@ class RedBlackBST {
   Node *put(Node *x, string key, int val) {
     if (x == nullptr) {
       // 标准的插入操作，和父结点用红链接相连
+      // TODO: x->N will always be 1
       return new Node(key, val, 1, RED);
     }
     if (key < x->key) {
